@@ -1,10 +1,23 @@
+
 from django.shortcuts import render
-from gtts import gTTS
+from .models import Note
+import pytz
+from datetime import datetime
+from .func import createFileName
+
 
 def mainView(request):
     if request.method == "GET":
+        myText = "Я - самозванец, и меня наверняка разоблачат!"
+        fileName = createFileName()
+        newNote = Note(
+            fileName = fileName,
+            dateTime = pytz.UTC.localize(datetime.now()),
+            text = myText,
+        )
+        newNote.save()
         return render(request, "index.html")
-    elif request.method == "POST":
-        text = request.POST["text"]
-        mp3_file = gTTS(text=text, lang="ru")
-        mp3_file.save(f'file.mp3')
+
+
+    # elif request.method == "POST":
+
