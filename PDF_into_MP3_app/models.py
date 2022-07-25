@@ -9,6 +9,7 @@ from datetime import datetime
 from PDF_into_MP3.settings import MEDIA_ROOT
 from .func import createFileName
 from io import BytesIO
+import asyncio
 
 class Note(models.Model):
     fileName = models.CharField(max_length=5)
@@ -16,11 +17,12 @@ class Note(models.Model):
     text = models.CharField(max_length=10000)
     mp3File = models.FileField(upload_to="mp3/", blank=True)
 
+    #async def save(self, *args, **kwargs):
     def save(self, *args, **kwargs):
         f = open("file.mp3", 'wb')
         gTTS(text=self.text, lang='ru').write_to_fp(f)
         f.close()
         f = open("file.mp3", 'rb')
-        self.mp3File.save(self.fileName+'.mp3', File(f), save=False)
+        self.mp3File.save(self.fileName, File(f), save=False)
         f.close()
         super(Note, self).save(*args, **kwargs)
