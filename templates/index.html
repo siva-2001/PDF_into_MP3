@@ -5,13 +5,45 @@
     <title>PDF to MP3</title>
 
     {% load static %}
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link href="{% static 'css/custom.css' %}" rel="stylesheet">
 </head>
 <body class="bg-light">
     <div class="conteiner page-background" >
         <div class="row justify-content-center">
-            <div class="col-6 work-space ">
-                <p class="h2">sdfasdfafsd</p>
+            <div class="col-lg-6 col-10 work-space ">
+                <p class="h1 mt-3">Озвучка текста</p>
+                <p class="h5">Работает на основе сервиса Google-Text-to-Speech.</p>
+                {{ error }}
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="input-group input-group-lg my-3">
+                        {{  form.text  }}
+                    </div>
+                    <p class="h5">Или загрузите PDF файл:</p>
+                    <div class="input-group input-group-lg my-3">
+                        {{ form.pdfFile }}
+                    </div>
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <button type="submit" class="sendVoiceBtn">
+                                Озвучить
+                            </button>
+                        </div>
+                    </div>
+                    {% if note %}
+                    <a href="{{ note.mp3File.url }}">
+                        <p class="h5 mb-3">
+                            Воспроизвести MP3
+                        </p>
+                    </a>
+                    <a href="{{ note.mp3File.url }}" download>
+                        <p class="h5 mb-3">
+                           Скачать MP3
+                        </p>
+                    </a>
+                    {% endif %}
+                </form>
             </div>
         </div>
     </div>
