@@ -13,15 +13,22 @@ class Note(models.Model):
     #async def save(self, *args, **kwargs):
     def save(self, *args, **kwargs):
         if self.text:
-            f = open("file.mp3", 'wb')
+            f = open("temporaryFiles/MP3File.mp3", 'wb')
             gTTS(text=self.text, lang='ru').write_to_fp(f)
             f.close()
-            f = open("file.mp3", 'rb')
+            f = open("temporaryFiles/MP3File.mp3", 'rb')
             self.mp3File.save(self.fileName, File(f), save=False)
             f.close()
         else:
-            with open(self.pdfFile.path, "r") as f:
-                pdf = pdftotext.PDF(f)
-                print(pdf)
-
+            with open("temporaryFiles/tempFile.pdf", "rb") as f:
+                pdfText = pdftotext.PDF(f)
+                text = ''
+                for string in pdfText:
+                    text = text + string
+                f = open("temporaryFiles/MP3File.mp3", 'wb')
+                gTTS(text=text, lang='ru').write_to_fp(f)
+                f.close()
+                f = open("temporaryFiles/MP3File.mp3", 'rb')
+                self.mp3File.save(self.fileName, File(f), save=False)
+                f.close()
         super(Note, self).save(*args, **kwargs)
